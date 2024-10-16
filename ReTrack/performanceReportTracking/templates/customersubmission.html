@@ -1,0 +1,540 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <!-- Include Toastr CSS -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+    <!--TAB NAME-->
+    <title>Customer Submission Page</title>
+
+    <!--CSS-->
+    <style type="text/css">
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap");
+      :root {
+        --primary: #eeeeee;
+        --secondary: #007bff;
+        --tertiary: #ffaa00;
+        --green: #82cd47;
+        --secondary-light: rgba(248, 211, 89, 0.2);
+        --secondary-light-2: rgba(12, 15, 12, 0.197);
+        --white: #fff;
+        --black: #393e46;
+        --shadow: 0px 2px 8px 0px var(--secondary-light-2);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        width: 100%;
+        background-color: #ffffff; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 70px; 
+        margin: 0;
+      }
+
+      /*NAVIGATION*/
+      .navbar {
+        display: flex;
+        align-items: center;
+        height: 70px;
+        background-color: var(--white);
+        padding: 0 8%;
+        box-shadow: var(--shadow);
+        font-size: 30px;
+        width: 100%;
+        position: fixed; 
+        top: 0;
+        left: 0; 
+        z-index: 1000; 
+      }
+
+      .navbar-list {
+        width: 100%;
+        text-align: center;
+        padding-right: 2rem;
+      }
+
+      .navbar-list li {
+        display: inline-block;
+        margin: 0 1rem;
+      }
+
+      .navbar-list li a {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--black);
+        text-decoration: none;
+      }
+
+      .navbar-logo {
+        height: 40px;
+        width: auto;
+        margin-right: 10px;
+        margin-left: -100px;
+        vertical-align: middle;
+      }
+
+      
+
+      /*PROFILE DROPDOWN*/
+      .profile-dropdown {
+        position: relative;
+        width: fit-content;
+        margin-left: auto;
+      }
+
+      .profile-dropdown-btn {
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        width: 230px;
+        border-radius: 50px;
+        color: var(--black);
+        cursor: pointer;
+        border: 2px solid #ffaa00;
+        transition: box-shadow 0.2s ease-in, background-color 0.2s ease-in, border 0.3s;
+        z-index: 11;
+      }
+
+      .profile-dropdown-btn:hover {
+        background-color: var(--secondary-light);
+        box-shadow: var(--shadow);
+      }
+
+      .profile-img {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profile-dropdown-btn span {
+        margin: 0 0.5rem;
+        margin-right: 0;
+      }
+
+      .profile-dropdown-list {
+        position: absolute;
+        top: 68px; /* Adjust as necessary */
+        right: 0;
+        width: 220px;
+        background-color: var(--white);
+        border-radius: 10px;
+        max-height: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: max-height 0.5s;
+        z-index: 12;
+      }
+
+      .profile-dropdown-list hr {
+        border: 0.5px solid var(--green);
+      }
+
+      .profile-dropdown-list.active {
+        max-height: 500px;
+      }
+
+      .profile-dropdown-list-item {
+        padding: 0.5rem 0rem 0.5rem 1rem;
+        transition: background-color 0.2s ease-in, padding-left 0.2s;
+      }
+
+      .profile-dropdown-list-item a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--black);
+      }
+
+      .profile-dropdown-list-item a img {
+        margin-right: 0.8rem;
+        width: 2.3rem;
+        height: 2.3rem;
+        background-color: var(--tertiary);
+        color: var(--white);
+        line-height: 2.3rem;
+        text-align: center;
+        border-radius: 50%;
+        padding: 0.5rem;
+        object-fit: cover;
+      }
+
+      .profile-dropdown-list-item:hover {
+        padding-left: 1.5rem;
+        background-color: var(--secondary-light);
+      }
+
+      /* BACKGROUND BELOW NAV */
+      .background-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+        transform: scale(1.0);
+        transition: transform 0.3s ease;
+      }
+
+      .image-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      /*CUSTOMER FORM */
+      #customerForm {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: -600px; 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        color: #6b6b6b;
+        text-align: left;
+        margin-bottom: 20px; 
+      }
+ 
+      #customerForm label{
+        font-weight: bold;
+      }
+
+      #customerForm input[type="text"],
+      #customerForm textarea,
+      #customerForm input[type="file"],
+      #customerForm select,
+      #customerForm input[type="date"] {
+        width: 90%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+
+      #customerForm b{
+        font-size: 1.2rem; 
+        color: #f96f05; 
+    }
+
+
+    #customerForm input[type="submit"] {
+      background-color: #0099ff;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in;
+      border-radius: 50px;
+      width: 30%;
+      padding: 10px 15px;
+      border: none;
+    }
+    
+    #customerForm input[type="submit"]:hover {
+      background-color: #307de0;
+    }
+
+      /* CONTENT */
+      #content {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        min-height: calc(100vh - 70px); 
+        margin-top: 0; 
+        padding: 20px; 
+        width: 100%;
+        position: relative; 
+        z-index: 1; 
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .navbar {
+          height: 70px;
+          font-size: 15px;
+          padding: 0 5%; 
+          margin-right: 0; 
+        }
+      
+        .navbar-logo {
+          height: 30px; 
+          margin-left: 0; 
+        }
+      
+        .navbar-list li {
+          margin: 0 0.5rem; 
+        }
+
+        .profile-dropdown-btn {
+          width: 150px;
+          font-size: 10px;
+        }
+
+
+        #content {
+          margin-top: -200px;
+        }
+
+        #customerForm {
+          padding: 10px;
+          margin: 10px; 
+          max-width: 100%; 
+          box-shadow: none; 
+          border: 1px solid #ccc; 
+          margin-top: -300px;
+        }
+      
+        #customerForm label {
+          font-size: 0.8rem; 
+        }
+
+        .toast {
+          font-size: 10px !important;
+          padding-top: 10px !important; 
+      }
+      
+        
+
+      }
+
+
+      /* POPOUT MESSAGES */
+      .toast-top-right {
+        position: fixed;
+        top: 150px;
+        right: 20px;
+        z-index: 9999;
+    }
+    
+    .toast-top-right .toast {
+        width: 300px; 
+    }
+
+    /* DROPDOWN SUBMISSION */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-content {
+      display: none; /* Hidden by default */
+      position: absolute;
+      top: 100%; /* Positions the dropdown directly below the parent item */
+      left: 0;
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      min-width: 160px;
+      z-index: 1000;
+    }
+    
+    .dropdown-content a {
+      color: var(--black);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    .dropdown-content a:hover {
+      background-color: var(--secondary-light);
+    }
+    
+    .dropdown.active .dropdown-content {
+      display: block;
+    }
+
+
+
+      
+    </style>
+  </head>
+
+  <body>
+    <!--NAVIGATION -->
+    <nav class="navbar">
+      <img src="{% static 'logo.png' %}" class="navbar-logo" alt="Logo" />
+      ReTrack
+      <ul class="navbar-list">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li class="dropdown">
+          <a href="#" onclick="toggleDropdown(event)">Submission</a>
+          <div class="dropdown-content">
+              <a href="{% url 'customersubmission' %}">Customer Details</a>
+              <a href="{% url 'reportsubmission' %}">Performance Report</a>
+          </div>
+      </li>
+        <li><a href="{% url 'viewsubmission' %}">View Submission</a></li>
+      </ul>
+
+
+      <div class="profile-dropdown">
+        <div onclick="toggle()" class="profile-dropdown-btn">
+          <div class="profile-img">
+            <img src="{% static 'user.png' %}" alt="User Profile" />
+          </div>
+          <span>{{ request.session.staffName }}</span>
+          <i class="fa-solid fa-caret-down"></i>
+        </div>
+  
+        <div class="profile-dropdown-list">
+          <div class="profile-dropdown-list-item">
+            <a href="{% url 'profile'  %}">
+              <img src="{% static 'profile.png' %}" alt="Profile Icon" />
+              My Profile
+            </a>
+          </div>
+
+          <div class="profile-dropdown-list-item">
+            <a href="{% url 'login' %}">
+              <img src="{% static 'logout.png' %}" alt="Logout Icon" />
+              Log Out
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- BACKGROUND -->
+    <div class="image-container">
+      <img src="{% static 'background.png' %}" class="background-img" alt="Background Image" />
+    </div>
+
+
+    <div id="content">
+        <div class="content">
+            <!-- CUSTOMER FORM -->
+            <div id="customerForm" class="form-container">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <b>Customer Details</b>
+                        <br><br>
+                        <label for="companyName">Company Name:</label>
+                        <input type="text" name="companyName" id="companyName">
+                        <br>
+                        <label for="companyEmail">Email:</label><br>
+                        <input type="text" name="companyEmail" id="companyEmail">
+                        <br>
+                        <label for="catogery">Category:</label>
+                        <select name="catogery" id="catogery">
+                            <option value="">-- Select Category --</option>
+                            {% for category in categories %}
+                                <option value="{{ category.katogeri }}">{{ category.katogeri }}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <label for="package">Package:</label>
+                        <select name="package" id="package">
+                            <option value="">-- Select Package --</option>
+                            {% for package in packages %}
+                                <option value="{{ package.pakej }}">{{ package.pakej }}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <label for="adsPlatform">Ads Platform:</label>
+                        <select name="adsPlatform" id="adsPlatform">
+                            <option value="">-- Select Ads Platform --</option>
+                            {% for platform in ads_platforms %}
+                                <option value="{{ platform.ads }}">{{ platform.ads }}</option>
+                            {% endfor %}
+                        </select>
+                        <br><br>
+                        <center>
+                            <input type="submit" value="Submit">
+                        </center>
+                        {{ message }}
+                    </div>
+                </form>
+            </div>
+
+    
+      <!-- JAVASCRIPT -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+      <script>
+        // POPOUT MESSAGES
+        $(document).ready(function() {
+          toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          };
+    
+          {% if messages %}
+            {% for message in messages %}
+              var type = "{{ message.tags }}"; 
+              var text = "{{ message }}";
+              if (type === 'success') {
+                toastr.success(text);
+              } else if (type === 'error') {
+                toastr.error(text);
+              }
+            {% endfor %}
+          {% endif %}
+        });
+    
+        /* PROFILE DROPDOWN */
+      function toggle() {
+        const dropdownList = document.querySelector(".profile-dropdown-list");
+        dropdownList.classList.toggle("active");
+      }
+        // TOGGLE DROPDOWN MENU
+        function toggleDropdown(event) {
+          event.preventDefault();
+          var dropdown = document.querySelector(".dropdown");
+          dropdown.classList.toggle("active");
+        }
+
+
+
+
+        
+    
+        
+      </script>
+    </body>
+    </html>

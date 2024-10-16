@@ -1,0 +1,387 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--TAB NAME-->
+    <title>Login Page</title>
+
+    <!--CSS-->
+    <style type="text/css">
+
+        /* OVERALL */
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            box-sizing: border-box;
+        }
+
+        /* LOGO */
+        .banner {
+            width: 100%;
+            height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.40),rgba(0,0,0,0.40));
+            background-position: center;
+            background-size: cover; 
+            position: relative;
+        }
+        .navbar {
+            width: 90%;
+            padding: 30px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: start; 
+            position: relative; 
+        }
+
+        .user-type-label {
+            text-align: center; 
+            font-size: 14px; 
+            display: block; 
+            margin: 10px 0; 
+        }
+        
+        .user-type-navigation {
+            margin-top: 10px; 
+            text-align: center; 
+        }
+        
+        .user-type-navigation a {
+            text-decoration: none;
+            color: orange; 
+            font-size: 16px; 
+            cursor: pointer; 
+            padding: 5px; 
+        }
+        
+        .user-type-navigation a:hover {
+            color: #0056b3; 
+        }
+        
+        .user-type-navigation a.active {
+            font-weight: bold;
+            color: #0056b3; 
+        }
+        
+        .logo {
+            width: 160px; 
+            margin-top: -10px; 
+            cursor: pointer;
+            position: absolute; 
+            top: 30px; 
+            left: -30px; 
+        }
+
+        /* CONTENT */
+        .content {
+            width: 100%;
+            position: absolute;
+            color: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .content h1 {
+            margin-top: 80px;
+            font-size: 90px;
+            font-weight: 800;
+        }
+        .content a {
+            text-decoration: none;
+            display: inline-block;
+            color: #fff;
+            font-size: 24px;
+            border: 2px solid #fff;
+            padding: 14px 70px;
+            border-radius: 50px;
+            margin-top: 20px;
+            background-color: transparent; 
+            transition: background-color 0.3s, color 0.3s; 
+        }
+        .content a:hover {
+            background-color: #fff; 
+            color: #000; 
+        }
+
+        /* VIDEO */
+        .banner video {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+
+        /*MODAL*/
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 420px;
+            position: relative;
+            border-radius: 15px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        .close {
+            color: #000;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: red;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-container {
+            width: 300px; 
+            margin: 0 auto; 
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px; 
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            width: auto; 
+            display: inline-block; 
+            font-size: 16px; 
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        /* EYE ICON */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            padding-right: 10px; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .password-container i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+        }
+
+        
+
+
+    </style>
+</head>
+
+
+<body>
+
+    <!--LOGO -->
+    <div class="banner">
+        <div class="navbar">
+            <img src="{% static 'logo.png' %}" class="logo" alt="Logo"> 
+        </div>
+
+        <!--VIDEO -->
+        <video autoplay loop muted playsinline>
+            <source src="{% static 'Loginbackground.mp4' %}" type="video/mp4">
+        </video>
+        
+        <!--CONTENT -->
+        <div class="content">
+            <h1>ReTrack</h1>
+            <a href="#" id="loginBtn">Login</a>
+        </div>
+    </div>
+
+    <!--LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div class="form-container">
+                <center><h2>Login Your Account!</h2></center>
+                <br>
+    
+                <div class="form-group">
+                    <label class="user-type-label">Login as:</label>
+                    <div class="user-type-navigation">
+                        <a href="#" onclick="setUserType('staff'); showStaffForm();">Staff</a>
+                        <span> / </span>
+                        <a href="#" onclick="setUserType('admin'); showAdminForm();">Admin</a>
+                    </div>
+                    <input type="hidden" id="userType" name="userType" required>
+                </div>
+    
+                {% if error_message %}
+                    <p style="color: red;">{{ error_message }}</p>
+                {% endif %}
+    
+                <!-- STAFF FORM -->
+                <form id="staffForm" method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="staffID">Staff ID:</label>
+                        <input type="text" id="staffID" name="staffID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="staffPassword">Staff Password:</label>
+                        <div class="password-container">
+                            <input type="password" id="staffPass" name="staffPass" required>
+                            <i class="fa fa-eye" id="eyeIcon" onclick="togglePasswordVisibility('staffPassword')"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <center><button type="submit">Login</button></center>
+                    </div>
+                </form>
+    
+                <!-- ADMIN FORM-->
+                <form id="adminForm" style="display: none;" method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="adminID">Admin ID:</label>
+                        <input type="text" id="adminID" name="adminID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password:</label>
+                        <div class="password-container">
+                            <input type="password" id="adminPass" name="adminPass" required>
+                            <i class="fa fa-eye" id="eyeIcon" onclick="togglePasswordVisibility('adminPassword')"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <center><button type="submit">Login</button></center>
+                    </div>
+                </form>
+    
+            </div>
+        </div>
+    </div>
+    
+
+
+<!--JAVASCRIPT -->
+<script>
+
+    //EYE ICON
+    document.addEventListener('DOMContentLoaded', function() {
+        var eyeIcon = document.getElementById('eyeIcon');
+        var passwordInput = document.getElementById('password');
+
+        eyeIcon.addEventListener('click', function() {
+            var type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+
+            if (type === 'password') {
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            } else {
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+        });
+    });
+    
+    //MODAL
+    var modal = document.getElementById("loginModal");
+    var btn = document.getElementById("loginBtn");
+    var span = document.getElementById("closeModal");
+
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // STAFF AND ADMIN LINK
+    function setUserType(userType) {
+        const links = document.querySelectorAll('.user-type-navigation a');
+    
+        links.forEach(link => link.classList.remove('active'));
+    
+        if (userType === 'staff') {
+            links[0].classList.add('active'); 
+        } else if (userType === 'admin') {
+            links[1].classList.add('active'); 
+        }
+    }
+
+    // STAFF AND ADMIN FORM
+    function showStaffForm() {
+        document.getElementById('adminForm').style.display = 'none'; // Hide admin form
+        document.getElementById('staffForm').style.display = 'block'; // Show staff form
+        document.getElementById('userType').value = 'staff'; // Set user type
+    }
+
+    function showAdminForm() {
+        document.getElementById('staffForm').style.display = 'none'; // Hide staff form
+        document.getElementById('adminForm').style.display = 'block'; // Show admin form
+        document.getElementById('userType').value = 'admin'; // Set user type
+    }
+    
+    // SHOW STAFF FORM WHEN USER CLICK ON LOGIN
+    window.onload = function() {
+        showStaffForm();
+    };
+
+    //ERROR MESSAGE
+    {% if error_message %}
+        document.getElementById("loginModal").style.display = "flex";
+    {% endif %}
+</script>
+</body>
+</html>

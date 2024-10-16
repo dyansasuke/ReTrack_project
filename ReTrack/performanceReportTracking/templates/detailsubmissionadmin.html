@@ -1,0 +1,626 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--TAB NAME-->
+    <title>Detail Submission Admin Page</title>
+
+    <!--CSS-->
+    <style type="text/css">
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap");
+      :root {
+        --primary: #eeeeee;
+        --secondary: #007bff;
+        --tertiary: #ffaa00;
+        --green: #82cd47;
+        --secondary-light: rgba(248, 211, 89, 0.2);
+        --secondary-light-2: rgba(12, 15, 12, 0.197);
+        --white: #fff;
+        --black: #393e46;
+        --shadow: 0px 2px 8px 0px var(--secondary-light-2);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        width: 100%;
+        background-color: #ffffff; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 70px; 
+        margin: 0;
+      }
+
+      /*NAVIGATION*/
+      .navbar {
+        display: flex;
+        align-items: center;
+        height: 70px;
+        background-color: var(--white);
+        padding: 0 8%;
+        box-shadow: var(--shadow);
+        font-size: 30px;
+        width: 100%;
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        z-index: 1000; 
+      }
+
+      .navbar-list {
+        width: 100%;
+        text-align: center;
+        padding-right: 2rem;
+      }
+
+      .navbar-list li {
+        display: inline-block;
+        margin: 0 1rem;
+      }
+
+      .navbar-list li a {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--black);
+        text-decoration: none;
+      }
+
+      .navbar-logo {
+        height: 40px;
+        width: auto;
+        margin-right: 10px;
+        margin-left: -100px;
+        vertical-align: middle;
+      }
+
+      /*PROFILE DROPDOWN*/
+      .profile-dropdown {
+        position: relative;
+        width: fit-content;
+        margin-left: auto;
+      }
+
+      .profile-dropdown-btn {
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        width: 230px;
+        border-radius: 50px;
+        color: var(--black);
+        cursor: pointer;
+        border: 2px solid #ffaa00;
+        transition: box-shadow 0.2s ease-in, background-color 0.2s ease-in, border 0.3s;
+        z-index: 11;
+      }
+
+      .profile-dropdown-btn:hover {
+        background-color: var(--secondary-light);
+        box-shadow: var(--shadow);
+      }
+
+      .profile-img {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profile-dropdown-btn span {
+        margin: 0 0.5rem;
+        margin-right: 0;
+      }
+
+      .profile-dropdown-list {
+        position: absolute;
+        top: 68px;
+        width: 220px;
+        right: 0;
+        background-color: var(--white);
+        border-radius: 10px;
+        max-height: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: max-height 0.5s;
+        z-index: 12;
+      }
+
+      .profile-dropdown-list hr {
+        border: 0.5px solid var(--green);
+      }
+
+      .profile-dropdown-list.active {
+        max-height: 500px;
+      }
+
+      .profile-dropdown-list-item {
+        padding: 0.5rem 0rem 0.5rem 1rem;
+        transition: background-color 0.2s ease-in, padding-left 0.2s;
+      }
+
+      .profile-dropdown-list-item a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--black);
+      }
+
+      .profile-dropdown-list-item a img {
+        margin-right: 0.8rem;
+        width: 2.3rem;
+        height: 2.3rem;
+        background-color: var(--tertiary);
+        color: var(--white);
+        line-height: 2.3rem;
+        text-align: center;
+        border-radius: 50%;
+        padding: 0.5rem;
+        object-fit: cover;
+      }
+
+      .profile-dropdown-list-item:hover {
+        padding-left: 1.5rem;
+        background-color: var(--secondary-light);
+      }
+
+      /* BACKGROUND BELOW NAV */
+      .background-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+        transform: scale(1.0);
+        transition: transform 0.3s ease;
+      }
+
+      .image-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+    /* READ-ONLY FORM */
+    #readOnlyForm {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        color: #6b6b6b;
+        text-align: left;
+        margin-top: -255px;
+    }
+    
+    #readOnlyForm label {
+        font-weight: bold;
+    }
+    
+    #readOnlyForm input[type="text"],
+    #readOnlyForm textarea,
+    #readOnlyForm input[type="date"],
+    #readOnlyForm select {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+        color: #666;
+        cursor: not-allowed;
+        pointer-events: none; 
+    }
+    
+    #readOnlyForm a.file-link {
+        display: block;
+        margin: 5px 0;
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    #readOnlyForm a.file-link:hover {
+        text-decoration: underline;
+    }
+    
+    #readOnlyForm input[type="submit"] {
+        display: none;
+    }
+    
+    #readOnlyForm b {
+        font-size: 1.2rem; 
+        color: #f96f05; 
+    }
+
+      /* CONTENT */
+      #content {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        min-height: calc(100vh - 70px); 
+        margin-top: 0; 
+        padding: 20px; 
+        width: 100%;
+        position: relative; 
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      /* BACK ICON */
+      .back-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: none;
+        border: none;
+        color: var(--secondary);
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 0.3s ease, transform 0.3s ease;
+        position: absolute; 
+        left: 10px; 
+        top: 10px; 
+        text-decoration: none;
+        z-index: 10; 
+    }
+
+    .back-btn img {
+        width: 1.5rem; 
+        height: 1.5rem; 
+        margin-bottom: 0.2rem; 
+        pointer-events: none; 
+    }
+
+    .back-btn .edit-label {
+        font-size: 0.6rem; 
+    }
+
+    .back-btn:hover {
+        color: var(--tertiary);
+        transform: scale(1.05);
+    }
+
+    .back-btn:focus {
+        outline: none;
+    }
+
+    /*EDIT ICON*/
+    .edit-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      color: var(--secondary);
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease;
+      position: absolute; 
+      right: 10px; 
+      top: 10px; 
+      text-decoration: none;
+      z-index: 10; 
+    }
+
+    .edit-btn img {
+      width: 1.5rem; 
+      height: 1.5rem; 
+      margin-bottom: 0.2rem; 
+      pointer-events: none; 
+    }
+
+    .edit-btn .edit-label {
+      font-size: 0.90rem; 
+    }
+
+    .edit-btn:hover {
+      color: var(--tertiary);
+      transform: scale(1.05);
+    }
+
+    .edit-btn:focus {
+      outline: none;
+    }
+
+    /* FORM HEADER */
+    .profile-header {
+        position: relative; 
+        padding: 20px; 
+        text-align: center;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .navbar {
+          height: 70px;
+          font-size: 10px;
+          padding: 0 5%; 
+          margin-right: 0; 
+        }
+
+        .navbar-logo {
+          height: 30px; 
+          margin-left: 0; 
+        }
+
+        .navbar-list li {
+          margin: 0 0.5rem; 
+        }
+
+        .content {
+          margin-top: -300px;
+        }
+
+        #readOnlyForm {
+          padding: 10px;
+          margin: 10px; 
+          max-width: 100%; 
+          box-shadow: none; 
+          border: 1px solid #ccc; 
+        }
+
+        #readOnlyForm label {
+          font-size: 0.8rem; 
+        }
+
+        #readOnlyForm input[type="text"],
+        #readOnlyForm textarea,
+        #readOnlyForm input[type="date"],
+        #readOnlyForm select {
+          width: calc(100% - 16px); 
+          padding: 8px; 
+          margin: 4px 0; 
+          font-size: 0.8rem; 
+        }
+
+        #readOnlyForm b {
+          font-size: 1rem; 
+        }
+
+        .edit-btn {
+          font-size: 0.8rem; 
+          right: 10px; 
+          top: 10px; 
+      }
+  
+      .edit-btn img {
+          width: 1.2rem; 
+          height: 1.2rem; 
+      }
+
+      .profile-dropdown-btn {
+        width: 150px;
+        font-size: 10px;
+      }
+      }
+
+      /* DROPDOWN SUBMISSION */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-content {
+      display: none; /* Hidden by default */
+      position: absolute;
+      top: 100%; /* Positions the dropdown directly below the parent item */
+      left: 0;
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      min-width: 160px;
+      z-index: 1000;
+    }
+    
+    .dropdown-content a {
+      color: var(--black);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    .dropdown-content a:hover {
+      background-color: var(--secondary-light);
+    }
+    
+    /* Show Dropdown when Active */
+    .dropdown.active .dropdown-content {
+      display: block;
+    }
+
+    .download-link {
+      text-decoration: none;
+      color: #1a73e8; /* Optional: Change the link color */
+  }
+  .download-link:hover {
+      text-decoration: underline;
+  }
+    
+
+      
+    </style>
+  </head>
+
+  <body>
+    <!--NAVIGATION -->
+    <nav class="navbar">
+        <img src="{% static 'logo.png' %}" class="navbar-logo" alt="Logo" />
+        ReTrack
+        <ul class="navbar-list">
+            <li><a href="{% url 'adminhome' %}">Home</a> &nbsp;
+                <a href="{% url 'managestaff' %}">Manage Staff</a> &nbsp;
+                <a href="{% url 'viewsubmissionadmin' %}">View Submission</a>
+            </li>
+          </ul>
+  
+  
+        <div class="profile-dropdown">
+          <div onclick="toggle()" class="profile-dropdown-btn">
+            <div class="profile-img">
+              <img src="{% static 'user.png' %}" alt="User Profile" />
+            </div>
+            <span>{{ request.session.adminName }}</span>
+            <i class="fa-solid fa-caret-down"></i>
+          </div>
+
+        <div class="profile-dropdown-list">
+          <div class="profile-dropdown-list-item">
+            <a href="{% url 'adminprofile' %}">
+              <img src="{% static 'profile.png' %}" alt="Profile Icon" />
+              My Profile
+            </a>
+          </div>
+
+          <div class="profile-dropdown-list-item">
+            <a href="{% url 'login' %}">
+              <img src="{% static 'logout.png' %}" alt="Logout Icon" />
+              Log Out
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- BACKGROUND -->
+    <div class="image-container">
+      <img src="{% static 'background.png' %}" class="background-img" alt="Background Image" />
+    </div>
+
+    <!-- CONTENT -->
+    <div id="content">
+      <div class="content">
+        <!--ADD FORM -->
+        <form id="readOnlyForm" action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="profile-header">
+            <br><br>
+              <h1>Performance Report of {{ companyName }}</h1>
+              <a href="{% url 'viewsubmissionadmin'  %}" class="back-btn">
+                  <img src="{% static 'back.png' %}" alt="Back" />
+                  <span class="back-label">Back</span>
+              </a>
+          </div>
+  
+          <div class="form-group">
+              <br>
+              <b>Customer Details</b>
+              <br><br>
+              <label for="companyName">Company Name:</label>
+              <input type="text" name="companyName" id="companyName" value="{{ companyName }}" readonly>
+              <br>
+              
+              <label for="companyEmail">Email:</label><br>
+              <input type="text" name="companyEmail" id="companyEmail" value="{{ companyEmail }}" readonly>
+              <br>
+              
+              <label for="catogery">Category:</label><br>
+              <input type="text" name="catogery" id="catogery" value="{{ catogery }}" readonly>
+              <br>
+              
+              <label for="package">Package:</label><br>
+              <input type="text" name="package" id="package" value="{{ package }}" readonly>
+              <br>
+              
+              <label for="adsPlatform">Ads Platform:</label><br>
+              <input type="text" name="adsPlatform" id="adsPlatform" value="{{ adsPlatform }}" readonly>
+          </div>
+  
+          <br><br>
+          
+          <div class="form-group">
+              <b>Submission Details</b>
+              <br><br>
+              <label for="staffID">Staff ID:</label>
+              <input type="text" id="staffID" name="staffID" value="{{ staffID }}" readonly>
+
+              <label for="companyName">Company Name:</label>
+              <input type="text" name="companyName" id="companyName" value="{{ companyName }}" readonly>
+              <br>
+              
+              <p><strong>File:</strong> 
+                {% if reportFileUrl %}
+                    <a href="{{ reportFileUrl }}" class="download-link" download="{{ reportFileName }}">{{ reportFileName }}</a>
+                {% else %}
+                    No file attached.
+                {% endif %}
+            </p>
+            <br>
+                  
+              <label for="duration">Duration:</label>
+              <input type="text" name="duration" id="duration" value="{{ duration }}" readonly><br>
+  
+              <label for="dateSubmission">Date Submission:</label>
+              <input type="text" name="dateSubmission" id="dateSubmission" value="{{ dateSubmission }}" readonly>
+  
+              <label for="remark">Remark:</label>
+              <input type="text" name="remark" id="remark" value="{{ remark }}" readonly>
+          </div>
+          <br>
+      </form>
+        </div>
+      </div>
+
+    <!--JS-->
+    <script>
+      function toggle() {
+        var dropdown = document.querySelector(".profile-dropdown-list");
+        dropdown.classList.toggle("active");
+      }
+
+      //DROPDOWN SUBMISSION
+      function toggleDropdown(event) {
+        event.preventDefault(); 
+
+        
+        var dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(function(dropdown) {
+          if (dropdown !== event.currentTarget.parentNode) {
+            dropdown.classList.remove('active');
+          }
+        });
+
+        var dropdown = event.currentTarget.parentNode;
+        dropdown.classList.toggle('active');
+      }
+
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropdown a')) {
+          var dropdowns = document.querySelectorAll('.dropdown');
+          dropdowns.forEach(function(dropdown) {
+            dropdown.classList.remove('active');
+          });
+        }
+      }
+
+      
+    </script>
+  </body>
+</html>
